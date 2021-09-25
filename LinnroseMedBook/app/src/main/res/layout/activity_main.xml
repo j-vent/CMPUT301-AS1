@@ -66,11 +66,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/dose"
+        android:id="@+id/dailyDose"
         android:layout_width="104dp"
         android:layout_height="35dp"
         android:layout_marginBottom="28dp"
-        android:text="Dose"
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.561"

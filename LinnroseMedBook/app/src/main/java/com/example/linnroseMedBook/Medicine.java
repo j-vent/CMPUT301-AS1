@@ -7,12 +7,12 @@ import java.util.Date;
 public class Medicine {
     private Date startDate;
     private String name;
-    private Integer doseAmount;
+    private Double doseAmount;
     private String doseUnit;
     private Integer dailyFreq;
     // TODO: add validation checks for these fields
 
-    public Medicine(Date startDate, String name, Integer doseAmount, String doseUnit, Integer dailyFreq){
+    public Medicine(Date startDate, String name, Double doseAmount, String doseUnit, Integer dailyFreq){
         this.startDate = startDate;
         this.name = name;
         this.doseAmount = doseAmount;
@@ -28,5 +28,16 @@ public class Medicine {
     }
     public String getName(){
         return this.name;
+    }
+
+    public Double getDoseAmt(){
+        return this.doseAmount;
+    }
+    public String getDoseUnit(){
+        return this.doseUnit;
+    }
+
+    public Integer getDailyFrequency(){
+        return this.dailyFreq;
     }
 }

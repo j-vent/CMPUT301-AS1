@@ -28,10 +28,14 @@ public class MedicineList extends ArrayAdapter<Medicine> {
             view = LayoutInflater.from(context).inflate(R.layout.content, parent,false);
         }
         Medicine medicine = medicines.get(position);
-        TextView date = view.findViewById(R.id.date);
-        TextView name = view.findViewById(R.id.name);
+        TextView date = view.findViewById(R.id.list_date);
+        TextView name = view.findViewById(R.id.list_name);
+        TextView dose_unit = view.findViewById(R.id.list_dose_unit);
+        TextView frequency = view.findViewById(R.id.list_frequency);
         date.setText(medicine.getDate());
         name.setText(medicine.getName());
+        dose_unit.setText(medicine.getDoseAmt().toString() + " " + medicine.getDoseUnit());
+        frequency.setText(medicine.getDailyFrequency().toString());
         return view;
     }
 }
