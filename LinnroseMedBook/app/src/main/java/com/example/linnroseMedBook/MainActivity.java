@@ -53,19 +53,27 @@ public class MainActivity extends AppCompatActivity
                 new AddMedicineFragment().show(getSupportFragmentManager(), "ADD Medicine");
             }
         });
-        // update which city is selected
+        // update which medicine is selected
         medicineList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedMedicine = (Medicine) medicineList.getItemAtPosition(position);
+//                DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
+//                fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
+
+            }
+        });
+        Button editBtn = findViewById(R.id.editMedicineBtn);
+        editBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
                 DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
                 fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
-
             }
         });
 
         // listen for delete button click
-        final FloatingActionButton deleteBtn = findViewById(R.id.delMedicineBtn);
+        Button deleteBtn = findViewById(R.id.deleteMedicineBtn);
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

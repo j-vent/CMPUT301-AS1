@@ -29,41 +29,28 @@
         android:layout_width="97dp"
         android:layout_height="47dp"
         android:layout_gravity="bottom|end"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toStartOf="@+id/delMedicineBtn"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@android:drawable/ic_input_add" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delMedicineBtn"
-        android:layout_width="97dp"
-        android:layout_height="47dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="96dp"
-        android:clickable="true"
-        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/dailyDose"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@android:drawable/btn_minus" />
+        app:layout_constraintHorizontal_bias="0.865"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicineList"
+        app:layout_constraintVertical_bias="0.812"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
     <ListView
         android:id="@+id/medicineList"
-        android:layout_width="315dp"
-        android:layout_height="502dp"
+        android:layout_width="319dp"
+        android:layout_height="463dp"
         android:layout_marginTop="80dp"
+        android:choiceMode="singleChoice"
+        android:listSelector="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:choiceMode="singleChoice"
-        android:listSelector="@android:color/darker_gray"
         app:layout_constraintVertical_bias="0.01">
 
 
@@ -71,9 +58,9 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="157dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="36dp"
+        android:layout_width="147dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="44dp"
         android:layout_marginBottom="28dp"
         android:text="Total Daily Dosage:"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -87,8 +74,30 @@
         android:text="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.561"
+        app:layout_constraintHorizontal_bias="0.578"
         app:layout_constraintStart_toEndOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/editMedicineBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="132dp"
+        android:text="EDIT"
+        app:layout_constraintEnd_toStartOf="@+id/deleteMedicineBtn"
+        app:layout_constraintHorizontal_bias="0.814"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/deleteMedicineBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="48dp"
+        android:text="DELETE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
