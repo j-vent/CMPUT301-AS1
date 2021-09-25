@@ -28,15 +28,18 @@ public class MedicineList extends ArrayAdapter<Medicine> {
             view = LayoutInflater.from(context).inflate(R.layout.content, parent,false);
         }
         Medicine medicine = medicines.get(position);
-        TextView date = view.findViewById(R.id.list_date);
         TextView name = view.findViewById(R.id.list_name);
-        TextView dose_unit = view.findViewById(R.id.list_dose_unit);
-        TextView frequency = view.findViewById(R.id.list_frequency);
-        date.setText(medicine.getDate());
+        TextView date = view.findViewById(R.id.list_date);
+        TextView dose_unit_frequency = view.findViewById(R.id.list_dose_unit_frequency);
+        // TextView frequency = view.findViewById(R.id.list_frequency);
         name.setText(medicine.getName());
-        dose_unit.setText(medicine.getDoseAmt().toString() + " " + medicine.getDoseUnit());
-        frequency.setText(medicine.getDailyFrequency().toString());
-        System.out.println("updated name in medlist " + name.getText().toString());
+        date.setText(" Started on " +medicine.getDate());
+        // name.setText(medicine.getName());
+        dose_unit_frequency.setText(medicine.getDoseAmt().toString() + " "
+                + medicine.getDoseUnit() + " " + medicine.getDailyFrequency().toString()
+        + "x daily");
+        // frequency.setText(medicine.getDailyFrequency().toString());
+        // System.out.println("updated name in medlist " + name.getText().toString());
         return view;
     }
 }

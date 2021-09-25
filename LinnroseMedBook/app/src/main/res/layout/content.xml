@@ -4,53 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="2dp">
 
     <TextView
-        android:id="@+id/list_date"
+        android:id="@+id/list_name"
         android:layout_width="421dp"
         android:layout_height="48dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="1"
+        android:paddingLeft="5dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/list_name"
-        android:layout_width="421dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_date" />
-
-    <TextView
-        android:id="@+id/list_dose_unit"
+        android:id="@+id/list_date"
         android:layout_width="414dp"
         android:layout_height="47dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="2dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_name" />
 
     <TextView
-        android:id="@+id/list_frequency"
-        android:layout_width="410dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="12dp"
+        android:id="@+id/list_dose_unit_frequency"
+        android:paddingLeft="2dp"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="2dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_dose_unit"
-        app:layout_constraintVertical_bias="0.115" />
+        app:layout_constraintTop_toBottomOf="@+id/list_date" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
