@@ -36,6 +36,7 @@ public class MedicineList extends ArrayAdapter<Medicine> {
         name.setText(medicine.getName());
         dose_unit.setText(medicine.getDoseAmt().toString() + " " + medicine.getDoseUnit());
         frequency.setText(medicine.getDailyFrequency().toString());
+        System.out.println("updated name in medlist " + name.getText().toString());
         return view;
     }
 }

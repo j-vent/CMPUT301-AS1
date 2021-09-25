@@ -1,10 +1,13 @@
 package com.example.linnroseMedBook;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList<Medicine> medicineDataList;
     Integer dailyDose = 0;
     TextView dailyDoseDisplay;
+    Medicine selectedMedicine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +45,7 @@ public class MainActivity extends AppCompatActivity
         // dailyDoseDisplay.setText(0);
         medicineAdapter = new MedicineList(this, medicineDataList);
         medicineList.setAdapter(medicineAdapter);
-        Toast.makeText(getApplicationContext(), "testtoasttttt", Toast.LENGTH_SHORT).show();
-        System.out.println("toast in main");
+
         final FloatingActionButton addMedicineBtn = findViewById(R.id.addMedicineBtn);
         addMedicineBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -50,13 +53,37 @@ public class MainActivity extends AppCompatActivity
                 new AddMedicineFragment().show(getSupportFragmentManager(), "ADD Medicine");
             }
         });
+        // update which city is selected
+        medicineList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedMedicine = (Medicine) medicineList.getItemAtPosition(position);
+                DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
+                fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
+
+            }
+        });
+
+        // listen for delete button click
+        final FloatingActionButton deleteBtn = findViewById(R.id.delMedicineBtn);
+        deleteBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                medicineDataList.remove(selectedMedicine);
+                // notify adapter that a city was deleted
+                medicineAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
-    public void onOkPressed(Medicine medicine) {
-        validateMedicine(medicine);
-        medicineAdapter.add(medicine);
+    public void onOkPressed(Medicine medicine, boolean isNewMedicine) {
+        // validateMedicine(medicine);
+        if(isNewMedicine){
+            medicineAdapter.add(medicine);
+        }
         updateDailyDose(medicine);
+        medicineAdapter.notifyDataSetChanged();
     }
 
     // TODO: extend this method for the delete scenario

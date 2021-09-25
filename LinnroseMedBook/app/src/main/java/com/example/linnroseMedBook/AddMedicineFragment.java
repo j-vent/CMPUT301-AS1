@@ -30,24 +30,24 @@ public class AddMedicineFragment extends DialogFragment {
     Spinner unitSpinner;
     private OnFragmentInteractionListener listener;
 
-    public interface OnFragmentInteractionListener{
-        void onOkPressed(Medicine medicine);
+    public interface OnFragmentInteractionListener {
+        void onOkPressed(Medicine medicine, boolean isNewMedicine);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener)  context;
-        }
-        else{
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
             throw new RuntimeException(context.toString() +
                     "must implement OnFragmentInteractionListener");
         }
     }
+
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_medicine_fragment_layout, null);
@@ -57,13 +57,55 @@ public class AddMedicineFragment extends DialogFragment {
         doseAmount = view.findViewById(R.id.editTextDoseAmt);
         frequency = view.findViewById(R.id.editTextFreq);
         // setup dose unit selection / spinner
-        String [] doseUnits = {"mg", "mcg", "drop"};
+        String[] doseUnits = {"mg", "mcg", "drop"};
         unitSpinner = view.findViewById(R.id.unitSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, doseUnits);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         unitSpinner.setAdapter(adapter);
+        if (getArguments() != null) {
+            Medicine bundledMedicine = (Medicine) getArguments().getSerializable("medicine");
+            System.out.println("bundledMedicine" + bundledMedicine.getName());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            // date.updateDate(2021, 9, 25);
+            name.setText(bundledMedicine.getName());
+            doseAmount.setText(bundledMedicine.getDoseAmt().toString());
+            frequency.setText(bundledMedicine.getDailyFrequency().toString());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            return builder.setView(view).setTitle("Add or Edit Medicine")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Medicine editedMedicine = (Medicine) getArguments().getSerializable("medicine");
+                            // Date dateContent = startDate.getText().toString();
+                            // from JavaDocs: year y is represented by y - 1900
+                            int year = date.getYear() - 1900;
+                            int month = date.getMonth();
+                            int day = date.getDayOfMonth();
+                            System.out.println("year " + year + "month " + month + "day " + day);
+                            Date dateContent = new Date(year, month, day);
+                            String nameContent = name.getText().toString();
+                            String doseUnit = unitSpinner.getSelectedItem().toString();
+                            Double doseAmtContent = Double.parseDouble(doseAmount.getText().toString());
+                            Integer freqContent = Integer.parseInt(frequency.getText().toString());
+                            System.out.println("new name " + nameContent);
+                            // update Medicine
+                            editedMedicine.setName(nameContent);
+                            System.out.println("new name in obj" + editedMedicine.getName());
+                            editedMedicine.setDate(dateContent);
+                            editedMedicine.setDoseUnit(doseUnit);
+                            editedMedicine.setDailyFreq(freqContent);
+                            editedMedicine.setDoseAmt(doseAmtContent);
+
+                            listener.onOkPressed(editedMedicine, false);
+                            dialogInterface.dismiss();
+
+                        }
+                    }).create();
+        }
+     else{
+    System.out.println("else");
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view).setTitle("Add or Edit Medicine")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -75,42 +117,36 @@ public class AddMedicineFragment extends DialogFragment {
                         int year = date.getYear() - 1900;
                         int month = date.getMonth();
                         int day = date.getDayOfMonth();
-                        System.out.println("year " + year + "month " + month + "day "+ day);
+                        System.out.println("year " + year + "month " + month + "day " + day);
                         Date dateContent = new Date(year, month, day);
                         String nameContent = name.getText().toString();
                         String doseUnit = unitSpinner.getSelectedItem().toString();
                         Double doseAmtContent = Double.parseDouble(doseAmount.getText().toString());
                         Integer freqContent = Integer.parseInt(frequency.getText().toString());
-//                      Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-//                                "I`m a toast on top of a dialog.",
-//                                Toast.LENGTH_LONG);
-//                        // toast.setGravity(Gravity.CENTER,0,0);
-//                        toast.show();
-//                        showToast();
-//                        System.out.println("toast");
-                        System.out.println("name content "+ nameContent);
-                        if(nameContent.length() == 0){
-                            name.requestFocus();
-                            name.setError("wrong name");
-
-                            System.out.println("in name");
-                        }
-
-
+//          s
                         listener.onOkPressed(new Medicine(dateContent,
-                                nameContent, doseAmtContent, doseUnit, freqContent));
+                                nameContent, doseAmtContent, doseUnit, freqContent), true);
                         dialogInterface.dismiss();
 
                         TextView errMsg = view.findViewById(R.id.errorMessage);
                         errMsg.setText("error in your code");
-
-
                     }
-            }).create();
+                }).create();
     }
+
+}
     public void showToast() {
         System.out.println("in toast func");
         Toast.makeText(getActivity(), "toasttttt", Toast.LENGTH_SHORT).show();
         System.out.println("in after toast func");
+    }
+    static AddMedicineFragment newInstance(Medicine medicine){
+        Bundle args = new Bundle(0);
+        args.putSerializable("medicine", medicine);
+        AddMedicineFragment fragment = new AddMedicineFragment();
+        fragment.setArguments(args);
+        Medicine testCity = (Medicine) fragment.getArguments().getSerializable("medicine");
+        System.out.println(testCity.getName());
+        return fragment;
     }
 }
