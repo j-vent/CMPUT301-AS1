@@ -68,11 +68,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view){
                 // TODO: add check: if selected != null
-                System.out.println("selected med in main "+ selectedMedicine.getName());
-                DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
+                if(selectedMedicine != null){
+                    System.out.println("selected med in main "+ selectedMedicine.getName());
+                    DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
 
-                fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
-                updateDailyDose();
+                    fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
+                    updateDailyDose();
+                }
             }
         });
 
@@ -81,10 +83,13 @@ public class MainActivity extends AppCompatActivity
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                medicineDataList.remove(selectedMedicine);
-                // notify adapter that a city was deleted
-                medicineAdapter.notifyDataSetChanged();
-                updateDailyDose();
+                if(selectedMedicine != null){
+                    medicineDataList.remove(selectedMedicine);
+                    // notify adapter that a city was deleted
+                    medicineAdapter.notifyDataSetChanged();
+                    updateDailyDose();
+                }
+
             }
         });
     }

@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class AddMedicineFragment extends DialogFragment {
@@ -51,7 +52,8 @@ public class AddMedicineFragment extends DialogFragment {
 
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_medicine_fragment_layout, null);
         // startDate = view.findViewById(R.id.editTextDate);
-        date = view.findViewById(R.id.simpleDatePicker);
+        date = (DatePicker) view.findViewById(R.id.simpleDatePicker);
+
         name = view.findViewById(R.id.editTextName);
         doseAmount = view.findViewById(R.id.editTextDoseAmt);
         frequency = view.findViewById(R.id.editTextFreq);
@@ -73,10 +75,19 @@ public class AddMedicineFragment extends DialogFragment {
             Medicine bundledMedicine = (Medicine) getArguments().getSerializable("medicine");
             // System.out.println("existingmedicine" , )
             System.out.println("existing bundledMedicine" + bundledMedicine.getName());
+            System.out.println("existing bundledMedicine date" + bundledMedicine.getDate());
+            String existingDate = bundledMedicine.getDate();
             // date.updateDate(2021, 9, 25);
+            // yyyy-MM-dd
+            String[] dateParsed = existingDate.split("-");
+            // date = (DatePicker) view.findViewById(R.id.simpleDatePicker);
+            //date.in
+            date.init(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1])-1, Integer.parseInt(dateParsed[2]), null);
             name.setText(bundledMedicine.getName());
             doseAmount.setText(bundledMedicine.getDoseAmt().toString());
             frequency.setText(bundledMedicine.getDailyFrequency().toString());
+            int unitIndex = Arrays.asList(doseUnits).indexOf(bundledMedicine.getDoseUnit());
+            unitSpinner.setSelection(unitIndex);
         }
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -89,24 +100,11 @@ public class AddMedicineFragment extends DialogFragment {
                     public void onClick(View view) {
                         System.out.println("in onclick");
                         boolean isNewMedicine = false;
-                        // EDIT Case
-                   if (getArguments() != null) {
-//                            System.out.println("!!!!!edit med");
-//                            // pre-fill the edittext fields with old data
-//                            Medicine bundledMedicine = (Medicine) getArguments().getSerializable("medicine");
-//                            // System.out.println("existingmedicine" , )
-//                            System.out.println("existing bundledMedicine" + bundledMedicine.getName());
-//
-//                            // date.updateDate(2021, 9, 25);
-//                            name.setText(bundledMedicine.getName());
-//                            doseAmount.setText(bundledMedicine.getDoseAmt().toString());
-//                            frequency.setText(bundledMedicine.getDailyFrequency().toString());
+                        // NEW Case
+                   if (getArguments() == null) {
+                       isNewMedicine = true;
                    }
-                        else{
-                            System.out.println("bundle null new med");
-                            isNewMedicine = true;
-                        }
-
+//
                         int year = date.getYear() - 1900;
                         int month = date.getMonth();
                         int day = date.getDayOfMonth();
@@ -114,8 +112,15 @@ public class AddMedicineFragment extends DialogFragment {
                         Date dateContent = new Date(year, month, day);
                         String nameContent = name.getText().toString();
                         String doseUnit = unitSpinner.getSelectedItem().toString();
-                        Double doseAmtContent = Double.parseDouble(doseAmount.getText().toString());
-                        Integer freqContent = Integer.parseInt(frequency.getText().toString());
+                        Double doseAmtContent = -1.0;
+                        Integer freqContent = -1;
+                        System.out.println("null error " + doseAmount.getText());
+                        if(doseAmount.getText().length() != 0){
+                            doseAmtContent = Double.parseDouble(doseAmount.getText().toString());
+                        }
+                        if(frequency.getText().length() != 0){
+                            freqContent = Integer.parseInt(frequency.getText().toString());
+                        }
 
                         String errMessage = validateUserInput(nameContent, doseAmtContent, freqContent);
                         boolean valid = errMessage.length() == 0;
@@ -125,7 +130,7 @@ public class AddMedicineFragment extends DialogFragment {
                             // listener.onOkPressed(new Medicine(new Date(), "me", 1.0, "mg", 2), true);
                             if(isNewMedicine) {
                                 System.out.println("create new med");
-                                listener.onOkPressed(new Medicine(dateContent, nameContent, doseAmtContent, doseUnit, freqContent), true);
+                                listener.onOkPressed(new Medicine(dateContent, nameContent, doseAmtContent, doseUnit, freqContent), isNewMedicine);
                             } else{
                                 // update existing Medicine
                                 System.out.println("edit med setters");
@@ -136,7 +141,7 @@ public class AddMedicineFragment extends DialogFragment {
                                 editedMedicine.setDoseUnit(doseUnit);
                                 editedMedicine.setDailyFreq(freqContent);
                                 editedMedicine.setDoseAmt(doseAmtContent);
-                                listener.onOkPressed(editedMedicine, false);
+                                listener.onOkPressed(editedMedicine, isNewMedicine);
                             }
                             dialogInterface.dismiss();
                             dialog.dismiss();
@@ -162,14 +167,17 @@ public class AddMedicineFragment extends DialogFragment {
     // other 2 fields do not need validation since they are set by the spinner widgets
     public String validateUserInput(String name, Double doseAmtContent, Integer freqContent){
         String errMsg = ""; // TODO: optimize with stringbuilder
-        if(name.length() > 40){
-            errMsg += "Name must be less than 40 characters.";
+        if(name.length() > 40 || name.length() <= 0){
+            errMsg += "Name must be between 1 and 40 characters.";
         }
         if(doseAmtContent <= 0){
-            errMsg += "Dose Amount must be a positive numeric";
+            errMsg += "Dose Amount must be a positive numeric.";
         }
         if(freqContent <= 0){
-            errMsg += "Daily Frequency must be a positive integer";
+            errMsg += "Daily Frequency must be a positive integer.";
+        }
+        if(name == null || name.length() == 0 || doseAmtContent == null || freqContent == null ){
+            errMsg += "You must fill out all fields.";
         }
         return errMsg;
     }
