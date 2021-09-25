@@ -90,13 +90,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOkPressed(Medicine medicine, boolean isNewMedicine) {
         // validateMedicine(medicine);
+        Toast.makeText(getBaseContext(), "TEST TOAST.", Toast.LENGTH_LONG).show();
         if(isNewMedicine){
             medicineAdapter.add(medicine);
         }
         updateDailyDose();
         medicineAdapter.notifyDataSetChanged();
     }
-    
+
     public void updateDailyDose(){
         // dailyDose += medicine.getDailyFrequency();
         Integer dailyDose = 0;
