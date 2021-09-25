@@ -76,20 +76,33 @@ public class AddMedicineFragment extends DialogFragment {
                     public void onClick(View view) {
                         // TODO Do something
 
-                        boolean valid = false;
+                        int year = date.getYear() - 1900;
+                        int month = date.getMonth();
+                        int day = date.getDayOfMonth();
+                        // System.out.println("year " + year + "month " + month + "day " + day);
+                        Date dateContent = new Date(year, month, day);
+                        String nameContent = name.getText().toString();
+                        String doseUnit = unitSpinner.getSelectedItem().toString();
+                        Double doseAmtContent = Double.parseDouble(doseAmount.getText().toString());
+                        Integer freqContent = Integer.parseInt(frequency.getText().toString());
+
+                        String errMessage = validateUserInput(nameContent, doseAmtContent, freqContent);
+                        boolean valid = errMessage.length() == 0;
                         //Dismiss once everything is OK.
                         if (valid) {
-                            listener.onOkPressed(new Medicine(new Date(), "me", 1.0, "mg", 2), true);
+                            // listener.onOkPressed(new Medicine(new Date(), "me", 1.0, "mg", 2), true);
+                            listener.onOkPressed(new Medicine(dateContent, nameContent, doseAmtContent, doseUnit, freqContent), true);
                             dialogInterface.dismiss();
                             dialog.dismiss();
                         }
                         else{
 //                            TextView errMsg = view.findViewById(R.id.errorMessage);
 //                            errMsg.setText("error in your code");
-                            Toast t = Toast.makeText(getActivity(), "TEST ERR TOAST.", Toast.LENGTH_LONG);
+                            Toast t = Toast.makeText(getActivity(), errMessage, Toast.LENGTH_LONG);
                             // t.setGravity(Gravity.TOP, 0, 250);
                             t.show();
                             System.out.println("err");
+
                         }
 
                     }
@@ -100,7 +113,20 @@ public class AddMedicineFragment extends DialogFragment {
 
     }
 
-
+    // other 2 fields do not need validation since they are set by the spinner widgets
+    public String validateUserInput(String name, Double doseAmtContent, Integer freqContent){
+        String errMsg = ""; // TODO: optimize with stringbuilder
+        if(name.length() > 40){
+            errMsg += "Name must be less than 40 characters.";
+        }
+        if(doseAmtContent <= 0){
+            errMsg += "Dose Amount must be a positive numeric";
+        }
+        if(freqContent <= 0){
+            errMsg += "Daily Frequency must be a positive integer";
+        }
+        return errMsg;
+    }
 
     /**
     @NonNull
