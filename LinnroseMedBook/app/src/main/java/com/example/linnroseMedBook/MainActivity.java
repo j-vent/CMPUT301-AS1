@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view){
                 // TODO: add check: if selected != null
+                System.out.println("selected med in main "+ selectedMedicine.getName());
                 DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
+
                 fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
                 updateDailyDose();
             }
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onOkPressed(Medicine medicine, boolean isNewMedicine) {
         // validateMedicine(medicine);
-        Toast.makeText(getBaseContext(), "TEST TOAST.", Toast.LENGTH_LONG).show();
+        // Toast.makeText(getBaseContext(), "TEST TOAST.", Toast.LENGTH_LONG).show();
         if(isNewMedicine){
             medicineAdapter.add(medicine);
         }
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void validateMedicine(Medicine medicine){
-        Toast.makeText(this, "toasttttt", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "toasttttt", Toast.LENGTH_SHORT).show();
         StringBuilder errorMsg = new StringBuilder();
         if(medicine.getName().length() > 40){
             System.out.println("bad name");

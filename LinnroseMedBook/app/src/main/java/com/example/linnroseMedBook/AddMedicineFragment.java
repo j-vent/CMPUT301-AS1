@@ -66,15 +66,46 @@ public class AddMedicineFragment extends DialogFragment {
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Ok", null);
         Dialog dialog = builder.create();
+
+        if (getArguments() != null) {
+            System.out.println("!!!!!edit med");
+            // pre-fill the edittext fields with old data
+            Medicine bundledMedicine = (Medicine) getArguments().getSerializable("medicine");
+            // System.out.println("existingmedicine" , )
+            System.out.println("existing bundledMedicine" + bundledMedicine.getName());
+            // date.updateDate(2021, 9, 25);
+            name.setText(bundledMedicine.getName());
+            doseAmount.setText(bundledMedicine.getDoseAmt().toString());
+            frequency.setText(bundledMedicine.getDailyFrequency().toString());
+        }
+
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                System.out.println("on show");
                 button.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View view) {
-                        // TODO Do something
+                        System.out.println("in onclick");
+                        boolean isNewMedicine = false;
+                        // EDIT Case
+                   if (getArguments() != null) {
+//                            System.out.println("!!!!!edit med");
+//                            // pre-fill the edittext fields with old data
+//                            Medicine bundledMedicine = (Medicine) getArguments().getSerializable("medicine");
+//                            // System.out.println("existingmedicine" , )
+//                            System.out.println("existing bundledMedicine" + bundledMedicine.getName());
+//
+//                            // date.updateDate(2021, 9, 25);
+//                            name.setText(bundledMedicine.getName());
+//                            doseAmount.setText(bundledMedicine.getDoseAmt().toString());
+//                            frequency.setText(bundledMedicine.getDailyFrequency().toString());
+                   }
+                        else{
+                            System.out.println("bundle null new med");
+                            isNewMedicine = true;
+                        }
 
                         int year = date.getYear() - 1900;
                         int month = date.getMonth();
@@ -90,8 +121,23 @@ public class AddMedicineFragment extends DialogFragment {
                         boolean valid = errMessage.length() == 0;
                         //Dismiss once everything is OK.
                         if (valid) {
+                            System.out.println("valid " + valid);
                             // listener.onOkPressed(new Medicine(new Date(), "me", 1.0, "mg", 2), true);
-                            listener.onOkPressed(new Medicine(dateContent, nameContent, doseAmtContent, doseUnit, freqContent), true);
+                            if(isNewMedicine) {
+                                System.out.println("create new med");
+                                listener.onOkPressed(new Medicine(dateContent, nameContent, doseAmtContent, doseUnit, freqContent), true);
+                            } else{
+                                // update existing Medicine
+                                System.out.println("edit med setters");
+                                Medicine editedMedicine = (Medicine) getArguments().getSerializable("medicine");
+                                editedMedicine.setName(nameContent);
+                                System.out.println("new name in obj " + editedMedicine.getName());
+                                editedMedicine.setDate(dateContent);
+                                editedMedicine.setDoseUnit(doseUnit);
+                                editedMedicine.setDailyFreq(freqContent);
+                                editedMedicine.setDoseAmt(doseAmtContent);
+                                listener.onOkPressed(editedMedicine, false);
+                            }
                             dialogInterface.dismiss();
                             dialog.dismiss();
                         }
@@ -235,6 +281,7 @@ public class AddMedicineFragment extends DialogFragment {
         System.out.println("in after toast func");
     }
     static AddMedicineFragment newInstance(Medicine medicine){
+        System.out.println("new instance ");
         Bundle args = new Bundle(0);
         args.putSerializable("medicine", medicine);
         AddMedicineFragment fragment = new AddMedicineFragment();
