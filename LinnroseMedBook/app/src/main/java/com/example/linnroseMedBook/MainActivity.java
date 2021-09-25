@@ -67,8 +67,10 @@ public class MainActivity extends AppCompatActivity
         editBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                // TODO: add check: if selected != null
                 DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
                 fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
+                updateDailyDose();
             }
         });
 
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity
                 medicineDataList.remove(selectedMedicine);
                 // notify adapter that a city was deleted
                 medicineAdapter.notifyDataSetChanged();
+                updateDailyDose();
             }
         });
     }
@@ -90,13 +93,16 @@ public class MainActivity extends AppCompatActivity
         if(isNewMedicine){
             medicineAdapter.add(medicine);
         }
-        updateDailyDose(medicine);
+        updateDailyDose();
         medicineAdapter.notifyDataSetChanged();
     }
-
-    // TODO: extend this method for the delete scenario
-    public void updateDailyDose(Medicine medicine){
-        dailyDose += medicine.getDailyFrequency();
+    
+    public void updateDailyDose(){
+        // dailyDose += medicine.getDailyFrequency();
+        Integer dailyDose = 0;
+        for(Medicine med: medicineDataList){
+            dailyDose += med.getDailyFrequency();
+        }
         dailyDoseDisplay.setText(dailyDose.toString());
     }
 
