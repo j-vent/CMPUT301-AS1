@@ -18,86 +18,103 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
-        implements AddMedicineFragment.OnFragmentInteractionListener{
-    ListView medicineList;
-    ArrayAdapter<Medicine> medicineAdapter;
-    ArrayList<Medicine> medicineDataList;
-    Integer dailyDose = 0;
-    TextView dailyDoseDisplay;
-    Medicine selectedMedicine;
+        implements AddEditMedicineFragment.OnFragmentInteractionListener{
+    private ListView medicineList;
+    private ArrayAdapter<Medicine> medicineAdapter;
+    private ArrayList<Medicine> medicineDataList;
+    private TextView dailyDoseDisplay;
+    private Medicine selectedMedicine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        medicineList = findViewById(R.id.medicineList);
-
-        // test medicines in list
-        Medicine m1 = new Medicine(new Date(), "Advil",1.0,"mg",1);
-        Medicine m2 = new Medicine(new Date(), "Tylenol",2.0,"dose",2);
-        medicineDataList = new ArrayList<>();
-        // medicineDataList.add(m1);
-        // medicineDataList.add(m2);
-        // Initialize to 0 since app initializes as a blank list
+        // initialize dose counter element
         dailyDoseDisplay = findViewById(R.id.dailyDose);
-        // System.out.println("daily dose disp " + dailyDoseDisplay);
-        // dailyDoseDisplay.setText(0);
+
+        // setup data and adapter
+        medicineList = findViewById(R.id.medicineList);
+        medicineDataList = new ArrayList<>();
         medicineAdapter = new MedicineList(this, medicineDataList);
         medicineList.setAdapter(medicineAdapter);
 
+        // setup add button
         final FloatingActionButton addMedicineBtn = findViewById(R.id.addMedicineBtn);
         addMedicineBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                new AddMedicineFragment().show(getSupportFragmentManager(), "ADD Medicine");
+                addMedicine();
             }
         });
+
         // update which medicine is selected
         medicineList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedMedicine = (Medicine) medicineList.getItemAtPosition(position);
-//                DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
-//                fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
-
             }
         });
+
+        // setup edit button
         Button editBtn = findViewById(R.id.editMedicineBtn);
         editBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 // TODO: add check: if selected != null
                 if(selectedMedicine != null){
-                    System.out.println("selected med in main "+ selectedMedicine.getName());
-                    DialogFragment fr = new AddMedicineFragment().newInstance(selectedMedicine);
-
-                    fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
-                    updateDailyDose();
+                    editMedicine(selectedMedicine);
                 }
             }
         });
 
-        // listen for delete button click
+        // setup delete button
         Button deleteBtn = findViewById(R.id.deleteMedicineBtn);
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 if(selectedMedicine != null){
-                    medicineDataList.remove(selectedMedicine);
-                    // notify adapter that a city was deleted
-                    medicineAdapter.notifyDataSetChanged();
-                    updateDailyDose();
+                    deleteMedicine(selectedMedicine);
                 }
-
             }
         });
     }
 
+    /**
+     * create a fragment to create a new medicine
+     */
+    public void addMedicine(){
+       DialogFragment fr = new AddEditMedicineFragment();
+       fr.show(getSupportFragmentManager(), "ADD Medicine");
+    }
+
+    /**
+     * create a fragment to edit an existing medicine
+     * @param selectedMedicine the medicine selected by the user in the listview
+     */
+    public void editMedicine(Medicine selectedMedicine){
+        DialogFragment fr = new AddEditMedicineFragment().newInstance(selectedMedicine);
+        fr.show(getSupportFragmentManager(), "EDIT MEDICINE");
+    }
+
+    /**
+     * delete a medicine from the listview and update the daily dose
+     * @param selectedMedicine
+     */
+    public void deleteMedicine(Medicine selectedMedicine){
+        medicineDataList.remove(selectedMedicine);
+        medicineAdapter.notifyDataSetChanged();
+        updateDailyDose();
+    }
+
+    /**
+     * Called when fragment "OK" button is clicked.
+     * Adds new or edits existing medicine object
+     * @param medicine medicine to add or update
+     * @param isNewMedicine check if we need to add this medicine to list
+     */
     @Override
     public void onOkPressed(Medicine medicine, boolean isNewMedicine) {
-        // validateMedicine(medicine);
-        // Toast.makeText(getBaseContext(), "TEST TOAST.", Toast.LENGTH_LONG).show();
         if(isNewMedicine){
             medicineAdapter.add(medicine);
         }
@@ -105,8 +122,10 @@ public class MainActivity extends AppCompatActivity
         medicineAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Computes the daily sum of frequencies and updates value displayed on the activity
+     */
     public void updateDailyDose(){
-        // dailyDose += medicine.getDailyFrequency();
         Integer dailyDose = 0;
         for(Medicine med: medicineDataList){
             dailyDose += med.getDailyFrequency();
@@ -114,13 +133,4 @@ public class MainActivity extends AppCompatActivity
         dailyDoseDisplay.setText(dailyDose.toString());
     }
 
-    public void validateMedicine(Medicine medicine){
-        // Toast.makeText(this, "toasttttt", Toast.LENGTH_SHORT).show();
-        StringBuilder errorMsg = new StringBuilder();
-        if(medicine.getName().length() > 40){
-            System.out.println("bad name");
-        }
-
-
-    }
 }
