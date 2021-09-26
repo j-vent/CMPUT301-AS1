@@ -53,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="66dp"
         android:ems="10"
+        android:hint="> 0"
         android:inputType="numberDecimal" />
 
     <TextView
@@ -66,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="63dp"
         android:ems="10"
+        android:hint="> 0"
         android:inputType="number" />
 
     <TextView
